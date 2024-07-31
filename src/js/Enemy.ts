@@ -5,6 +5,7 @@ import '../assets/images/enemies_anim.json';
 import '../assets/audio/bear.mp3';
 import '../assets/audio/wolf.mp3';
 import '../assets/audio/ent.mp3';
+import '../assets/images/enemies.png';
 import MatterEntity from "./MatterEntity";
 
 
@@ -12,18 +13,13 @@ export default class Enemy extends MatterEntity {
   private attacktimer: any;
   private attacking: any;
 
-  static preload(scene){
-    scene.load.atlas('enemies','assets/images/enemies.png','assets/images/enemies_atlas.json');
-    scene.load.animation('enemies_anim','assets/images/enemies_anim.json');
-    scene.load.audio('bear','assets/audio/bear.mp3');
-    scene.load.audio('wolf','assets/audio/wolf.mp3');
-    scene.load.audio('ent','assets/audio/ent.mp3');
-  }
-
   constructor(data){
 
-    super({scene: data.scene, x:data.enemy.x,y:data.enemy.y,texture:'enemies',frame:`${data.enemy.name}_idle_1`,drops: JSON.parse(data.enemy.properties.find(p=>p.name=='drops').value),health:data.enemy.properties.find(p=>p.name=='health').value,name:data.enemy.name});
-  
+    super({scene:data.scene,x:data.enemy.x,y:data.enemy.y,texture:'enemies',frame:`${data.enemy.name}_idle_1`,drops: JSON.parse(data.enemy.properties.find(p=>p.name=='drops').value),health:data.enemy.properties.find(p=>p.name=='health').value,name:data.enemy.name});
+
+    console.log(this.scene.textures.get('enemies').getFrameNames());
+
+
     const {Body,Bodies} = (Phaser.Physics.Matter as any).Matter;
     var enemyCollider = Bodies.circle(this.x,this.y,12,{isSensor:false,label:'enemyCollider'});
     var enemySensor = Bodies.circle(this.x,this.y,80, {isSensor:true, label:'enemySensor'});
@@ -39,6 +35,15 @@ export default class Enemy extends MatterEntity {
       context:this.scene,
     });
   }
+
+  static preload(scene){
+    scene.load.atlas('enemies','assets/images/enemies.png','assets/images/enemies_atlas.json');
+    scene.load.animation('enemies_anim','assets/images/enemies_anim.json');
+    scene.load.audio('bear','assets/audio/bear.mp3');
+    scene.load.audio('wolf','assets/audio/wolf.mp3');
+    scene.load.audio('ent','assets/audio/ent.mp3');
+  }
+
 
   attack = (target) => {
     if(target.dead || this.dead) {

@@ -6,6 +6,7 @@ import '../assets/images/female.png';
 import '../assets/images/items.png';
 import '../assets/audio/player.mp3';
 import MatterEntity from "./MatterEntity";
+import TextWindow from "./TextWindow";
 
 export default class Player extends MatterEntity {
   inputKeys: any;
@@ -13,12 +14,16 @@ export default class Player extends MatterEntity {
   private touching: any[];
   private textBubble: Phaser.GameObjects.Text;
   private weaponRotation: number;
+  private textWindow: TextWindow;
 
   constructor(data){
     // let {scene,x,y,texture,frame} = data;
     super({...data,health:2,drops:[],name:'player'});
 
     this.touching = [];
+
+    this.textWindow = new TextWindow(this.scene, data.x, data.y - 100, 200, 50);
+
     //Weapon
     this.textBubble = this.scene.add.text(data.x, data.y - 50, 'Hello!', {
       fontSize: '16px',
@@ -44,7 +49,29 @@ export default class Player extends MatterEntity {
     this.CreateMiningCollisions(playerSensor);
     this.CreatePickupCollisions(playerCollider);
     this.scene.input.on('pointermove',pointer => { if(!this.dead) this.setFlipX(pointer.worldX < this.x)});
+
+    this.scene.input.keyboard!.on('keydown', this.handleKeyInput, this);
+
   }
+
+
+  handleKeyInput(event: KeyboardEvent) {
+      if(event.key === 'Enter') {
+          if(!this.textWindow.isOpened){
+            this.textWindow.show();
+          }else {
+            this.textWindow.hide()
+          }
+      }
+
+        if (event.key === 'Backspace' && this.textWindow.isOpened) {
+          this.textWindow.removeLastCharacter();
+        } else if (/^[a-zA-Z0-9]$/.test(event.key)) {
+          // Check if the key is a letter (a-z, A-Z) or a number (0-9)
+          this.textWindow.addText(event.key);
+        }
+  }
+
 
   updateTextBubblePosition() {
     this.textBubble.setPosition(this.x - this.textBubble.width / 2, this.y - this.height - 10);
@@ -78,6 +105,7 @@ export default class Player extends MatterEntity {
     } else if (this.inputKeys.down.isDown) {
       playerVelocity.y = 1;
     }
+
     playerVelocity.normalize();
     playerVelocity.scale(speed);
     this.setVelocity(playerVelocity.x,playerVelocity.y);
@@ -89,6 +117,18 @@ export default class Player extends MatterEntity {
     this.spriteWeapon.setPosition(this.x,this.y);
     this.weaponRotate();
     this.updateTextBubblePosition();
+
+    this.textWindow.setPosition(this.x, this.y - 100);
+
+  }
+
+  showTextWindow(message: string) {
+    this.textWindow.show();
+  }
+
+  // Method to hide the text window
+  hideTextWindow() {
+    this.textWindow.hide();
   }
 
   weaponRotate(){

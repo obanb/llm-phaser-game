@@ -1,6 +1,13 @@
 import Phaser from 'phaser';
 import DropItem from "./DropItem";
 
+import '../assets/images/enemies_atlas.json';
+import '../assets/images/enemies_anim.json';
+import '../assets/audio/bear.mp3';
+import '../assets/audio/wolf.mp3';
+import '../assets/audio/ent.mp3';
+import '../assets/images/enemies.png';
+
 export default class MatterEntity extends Phaser.Physics.Matter.Sprite {
   private health: any;
   private drops: any;
@@ -11,11 +18,11 @@ export default class MatterEntity extends Phaser.Physics.Matter.Sprite {
     this.x += this.width/2;
     this.y -= this.height/2;
     this.depth = data.depth || 1;
-    this.name = data.ame;
+    this.name = data.name;
     this.health = data.health;
     this.drops = data.drops;
     this._position = new Phaser.Math.Vector2(this.x,this.y);
-    if(this.name) this.sound = this.scene.sound.add(this.name);
+    // if(this.name) this.sound = this.scene.sound.add(this.name);
     (this.scene.add.existing as any)(this);
   }
 
