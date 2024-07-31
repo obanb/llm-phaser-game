@@ -1,21 +1,28 @@
 import Phaser from 'phaser';
-import MatterEntity from "./MatterEntity.js";
 
 import '../assets/images/female_atlas.json';
 import '../assets/images/female_anim.json';
 import '../assets/images/female.png';
 import '../assets/images/items.png';
 import '../assets/audio/player.mp3';
+import MatterEntity from "./MatterEntity";
 
 export default class Player extends MatterEntity {
+  inputKeys: any;
+  private spriteWeapon: Phaser.GameObjects.Sprite;
+  private touching: any[];
+  private textBubble: Phaser.GameObjects.Text;
+  private weaponRotation: number;
+
   constructor(data){
-    let {scene,x,y,texture,frame} = data;
+    // let {scene,x,y,texture,frame} = data;
     super({...data,health:2,drops:[],name:'player'});
+
     this.touching = [];
     //Weapon
-    this.textBubble = this.scene.add.text(x, y - 50, 'Hello!', {
+    this.textBubble = this.scene.add.text(data.x, data.y - 50, 'Hello!', {
       fontSize: '16px',
-      fill: '#ffffff',
+      color: '#ffffff',
       backgroundColor: '#000000'
     });
 
@@ -25,7 +32,7 @@ export default class Player extends MatterEntity {
     this.spriteWeapon.setOrigin(0.25,0.75);
     this.scene.add.existing(this.spriteWeapon);
 
-    const {Body,Bodies} = Phaser.Physics.Matter.Matter;
+    const {Body,Bodies} = (Phaser.Physics.Matter as any).Matter;
     var playerCollider = Bodies.circle(this.x,this.y,12,{isSensor:false,label:'playerCollider'});
     var playerSensor = Bodies.circle(this.x,this.y,24, {isSensor:true, label:'playerSensor'});
     const compoundBody = Body.create({
@@ -74,7 +81,7 @@ export default class Player extends MatterEntity {
     playerVelocity.normalize();
     playerVelocity.scale(speed);
     this.setVelocity(playerVelocity.x,playerVelocity.y);
-    if(Math.abs(this.velocity.x) > 0.1 || Math.abs(this.velocity.y) > 0.1) {
+    if(Math.abs(this.velocity!.x) > 0.1 || Math.abs(this.velocity!.y) > 0.1) {
       this.anims.play('female_walk',true);
     }else {
       this.anims.play('female_idle',true);
@@ -104,7 +111,7 @@ export default class Player extends MatterEntity {
   }
 
   CreateMiningCollisions(playerSensor){
-    this.scene.matterCollision.addOnCollideStart({
+    (this.scene as any).matterCollision.addOnCollideStart({
       objectA:[playerSensor],
       callback: other => {
         if(other.bodyB.isSensor) return;
@@ -114,7 +121,7 @@ export default class Player extends MatterEntity {
       context: this.scene,
     });
 
-    this.scene.matterCollision.addOnCollideEnd({
+    (this.scene as any).matterCollision.addOnCollideEnd({
       objectA:[playerSensor],
       callback: other => {
         this.touching = this.touching.filter(gameObject => gameObject != other.gameObjectB);
@@ -125,7 +132,7 @@ export default class Player extends MatterEntity {
   }
 
   CreatePickupCollisions(playerCollider){
-    this.scene.matterCollision.addOnCollideStart({
+    (this.scene as any).matterCollision.addOnCollideStart({
       objectA:[playerCollider],
       callback: other => {
         if(other.gameObjectB && other.gameObjectB.pickup) other.gameObjectB.pickup();
@@ -133,7 +140,7 @@ export default class Player extends MatterEntity {
       context: this.scene,
     });
 
-    this.scene.matterCollision.addOnCollideActive({
+    (this.scene as any).matterCollision.addOnCollideActive({
       objectA:[playerCollider],
       callback: other => {
         if(other.gameObjectB && other.gameObjectB.pickup) other.gameObjectB.pickup();

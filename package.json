@@ -4,14 +4,16 @@
   "description": "aigame",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "client:start": "webpack serve --mode development",
+    "client:build": "webpack --mode production",
+    "server:start": "tsc && node dist/server/index.js"
   },
   "author": "ondrej basista",
   "license": "ISC",
   "dependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.2",
+    "@babel/preset-typescript": "^7.24.7",
     "@langchain/pinecone": "^0.0.7",
     "@pinecone-database/pinecone": "^2.2.2",
     "@types/express": "^4.17.21",
@@ -28,8 +30,14 @@
     "phaser": "^3.80.1",
     "phaser-matter-collision-plugin": "^1.0.0",
     "tiktoken": "^1.0.11",
+    "ts-loader": "^9.5.1",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }

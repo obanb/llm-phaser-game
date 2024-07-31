@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
 
 export default class DropItem extends Phaser.Physics.Matter.Sprite {
-  constructor(data){
-    let {scene,x,y,frame} = data;
-    super(scene.matter.world,x,y,'items',frame);
-    this.scene.add.existing(this);
-    const {Bodies} = Phaser.Physics.Matter.Matter;
+  private sound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+  constructor(data: any){
+    super(data.scene.matter.world,data.x,data.y,'items',data.frame);
+    // TODO
+    this.scene.add.existing(this as any);
+    const {Bodies} = (Phaser.Physics.Matter as any).Matter;
     var circleCollider = Bodies.circle(this.x,this.y,10,{isSensor:false,label:'collider'});
     this.setExistingBody(circleCollider);
     this.setFrictionAir(1);

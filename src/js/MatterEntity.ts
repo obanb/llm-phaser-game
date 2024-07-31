@@ -1,19 +1,22 @@
 import Phaser from 'phaser';
-import DropItem from "./DropItem.js";
+import DropItem from "./DropItem";
 
 export default class MatterEntity extends Phaser.Physics.Matter.Sprite {
+  private health: any;
+  private drops: any;
+  private _position: any
+  private sound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
   constructor(data){
-    let {name,scene,x,y,health,drops,texture,frame,depth} = data;
-    super(scene.matter.world,x,y,texture,frame);
+    super(data.scene.matter.world,data.x,data.y,data.texture,data.frame);
     this.x += this.width/2;
     this.y -= this.height/2;
-    this.depth = depth || 1;
-    this.name = name;
-    this.health = health;
-    this.drops = drops;
+    this.depth = data.depth || 1;
+    this.name = data.ame;
+    this.health = data.health;
+    this.drops = data.drops;
     this._position = new Phaser.Math.Vector2(this.x,this.y);
     if(this.name) this.sound = this.scene.sound.add(this.name);
-    this.scene.add.existing(this);
+    (this.scene.add.existing as any)(this);
   }
 
   get position() {
@@ -22,7 +25,7 @@ export default class MatterEntity extends Phaser.Physics.Matter.Sprite {
   }
 
   get velocity() {
-    return this.body.velocity;
+    return this.body?.velocity;
   }
 
   get dead() {

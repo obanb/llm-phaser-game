@@ -1,11 +1,11 @@
 import Phaser from 'phaser';
-import MatterEntity from "./MatterEntity.js";
 
 import '../assets/audio/tree.mp3';
 import '../assets/audio/rock.mp3';
 import '../assets/audio/bush.mp3';
 import '../assets/audio/pickup.mp3';
 import '../assets/images/resources_atlas.jso'
+import MatterEntity from "./MatterEntity";
 
 export default class Resource extends MatterEntity {
   
@@ -24,7 +24,7 @@ export default class Resource extends MatterEntity {
     super({scene,x:resource.x,y:resource.y,texture:'resources',frame:resource.type,drops,depth,health:5,name:resource.type});
     let yOrigin = resource.properties.find(p=>p.name == 'yOrigin').value;
     this.y = this.y + this.height * (yOrigin - 0.5);
-    const {Bodies} = Phaser.Physics.Matter.Matter;
+    const {Bodies} = (Phaser.Physics.Matter as any).Matter;
     var circleCollider = Bodies.circle(this.x,this.y,12,{isSensor:false,label:'collider'});
     this.setExistingBody(circleCollider);
     this.setStatic(true);

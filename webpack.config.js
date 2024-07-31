@@ -2,21 +2,29 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: './js/survival-game.js', // Adjust the entry point as needed
+    entry: './src/js/survival-game.ts', // Adjust the entry point as needed
     output: {
-        filename: 'bundle.js',
+        filename: 'client_bundle.js',
         path: path.resolve(__dirname, 'dist'),
-        clean: false, // Clean the output directory before emit
+        clean: true, // Clean the output directory before emit
+    },
+    resolve: {
+        extensions: ['.ts', '.js'], // Add .ts here
     },
     module: {
         rules: [
+            {
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                use: 'ts-loader',
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env'],
+                        presets: ['@babel/preset-env','@babel/preset-typescript'],
                     },
                 },
             },

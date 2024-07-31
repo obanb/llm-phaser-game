@@ -1,15 +1,16 @@
 import Phaser from 'phaser';
-import MatterEntity from "./MatterEntity.js";
-import PhaserMatterCollisionPlugin from 'phaser-matter-collision-plugin';
 
 import '../assets/images/enemies_atlas.json';
 import '../assets/images/enemies_anim.json';
 import '../assets/audio/bear.mp3';
 import '../assets/audio/wolf.mp3';
 import '../assets/audio/ent.mp3';
+import MatterEntity from "./MatterEntity";
 
 
 export default class Enemy extends MatterEntity {
+  private attacktimer: any;
+  private attacking: any;
 
   static preload(scene){
     scene.load.atlas('enemies','assets/images/enemies.png','assets/images/enemies_atlas.json');
@@ -20,12 +21,10 @@ export default class Enemy extends MatterEntity {
   }
 
   constructor(data){
-    let {scene,enemy} = data;
-    let drops = JSON.parse(enemy.properties.find(p=>p.name=='drops').value);
-    let health = enemy.properties.find(p=>p.name=='health').value;
-    super({scene,x:enemy.x,y:enemy.y,texture:'enemies',frame:`${enemy.name}_idle_1`,drops,health,name:enemy.name});
+
+    super({scene: data.scene, x:data.enemy.x,y:data.enemy.y,texture:'enemies',frame:`${data.enemy.name}_idle_1`,drops: JSON.parse(data.enemy.properties.find(p=>p.name=='drops').value),health:data.enemy.properties.find(p=>p.name=='health').value,name:data.enemy.name});
   
-    const {Body,Bodies} = Phaser.Physics.Matter.Matter;
+    const {Body,Bodies} = (Phaser.Physics.Matter as any).Matter;
     var enemyCollider = Bodies.circle(this.x,this.y,12,{isSensor:false,label:'enemyCollider'});
     var enemySensor = Bodies.circle(this.x,this.y,80, {isSensor:true, label:'enemySensor'});
     const compoundBody = Body.create({
@@ -34,7 +33,7 @@ export default class Enemy extends MatterEntity {
     });
     this.setExistingBody(compoundBody);
     this.setFixedRotation();
-    this.scene.matterCollision.addOnCollideStart({
+    (this.scene as any).matterCollision.addOnCollideStart({
       objectA:[enemySensor],
       callback: other => {if(other.gameObjectB && other.gameObjectB.name == 'player') this.attacking = other.gameObjectB;},
       context:this.scene,
@@ -58,7 +57,7 @@ export default class Enemy extends MatterEntity {
         this.setVelocityX(direction.x);
         this.setVelocityY(direction.y);
         if(this.attacktimer) {
-          clearInterval(this.attackTimer);
+          clearInterval(this.attacktimer);
           this.attacktimer = null;
         }
       } else {
@@ -67,8 +66,8 @@ export default class Enemy extends MatterEntity {
         }
       }
     }
-    this.setFlipX(this.velocity.x < 0);
-    if(Math.abs(this.velocity.x) > 0.1 || Math.abs(this.velocity.y) > 0.1) {
+    this.setFlipX(this.velocity!.x < 0);
+    if(Math.abs(this.velocity!.x) > 0.1 || Math.abs(this.velocity!.y) > 0.1) {
       this.anims.play(`${this.name}_walk`,true);
     }else {
       this.anims.play(`${this.name}_idle`,true);
