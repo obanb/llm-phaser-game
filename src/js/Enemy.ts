@@ -7,6 +7,7 @@ import '../assets/audio/wolf.mp3';
 import '../assets/audio/ent.mp3';
 import '../assets/images/enemies.png';
 import MatterEntity from "./MatterEntity";
+import {io} from "socket.io-client";
 
 
 export default class Enemy extends MatterEntity {
@@ -34,6 +35,22 @@ export default class Enemy extends MatterEntity {
       callback: other => {if(other.gameObjectB && other.gameObjectB.name == 'player') this.attacking = other.gameObjectB;},
       context:this.scene,
     });
+
+
+    const socket = io("http://localhost:8080/agent/ws");
+
+    socket.on('connect', () => {
+      console.log('Connected to /socket');
+    });
+
+    socket.emit('message', 'im here');
+
+    socket.on('move', (direction: { x: number, y: number }) => {
+      this.handleMovement(direction);
+    });
+
+    socket.emit('message', 'I\'m here');
+
   }
 
   static preload(scene){
@@ -42,6 +59,13 @@ export default class Enemy extends MatterEntity {
     scene.load.audio('bear','assets/audio/bear.mp3');
     scene.load.audio('wolf','assets/audio/wolf.mp3');
     scene.load.audio('ent','assets/audio/ent.mp3');
+  }
+
+
+  handleMovement(direction: { x: number, y: number }) {
+    // Example: Move the enemy based on the direction received
+    this.setVelocityX(direction.x);
+    this.setVelocityY(direction.y);
   }
 
 
