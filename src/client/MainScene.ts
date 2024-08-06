@@ -1,7 +1,7 @@
   import Phaser from 'phaser';
   // import Resource from "./Resource.js";
-  import '../assets/images/tileset_dungeon.png';
-  import '../assets/images/map.json';
+  import './assets/images/tileset_dungeon.png';
+  import './assets/images/map.json';
   import Player from "./Player";
   import Enemy from "./Enemy";
 

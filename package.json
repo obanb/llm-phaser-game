@@ -4,7 +4,7 @@
   "description": "aigame",
   "main": "index.js",
   "scripts": {
-    "client:build": "webpack --config webpack.config.js",
+    "client:build": "webpack --config webpack.config.js --mode production",
     "client:start": "npm run client:build && webpack serve --config webpack.config.js",
     "server:start": "tsc -p tsconfig.json && node -r dotenv/config dist/server/index.js"
   },

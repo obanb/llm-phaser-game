@@ -1,10 +1,10 @@
 import Phaser from 'phaser';
 
-import '../assets/audio/tree.mp3';
-import '../assets/audio/rock.mp3';
-import '../assets/audio/bush.mp3';
-import '../assets/audio/pickup.mp3';
-import '../assets/images/resources_atlas.jso'
+import './assets/audio/tree.mp3';
+import './assets/audio/rock.mp3';
+import './assets/audio/bush.mp3';
+import './assets/audio/pickup.mp3';
+import './assets/images/resources_atlas.jso'
 import MatterEntity from "./MatterEntity";
 
 export default class Resource extends MatterEntity {

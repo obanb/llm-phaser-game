@@ -63,8 +63,6 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './index.html', // Adjusted template path
-        }),
-        new HtmlWebpackPlugin({
             'process.env': JSON.stringify(process.env)
         }),
     ],

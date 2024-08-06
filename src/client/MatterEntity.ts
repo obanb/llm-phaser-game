@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
 import DropItem from "./DropItem";
 
-import '../assets/images/enemies_atlas.json';
-import '../assets/images/enemies_anim.json';
-import '../assets/audio/bear.mp3';
-import '../assets/audio/wolf.mp3';
-import '../assets/audio/ent.mp3';
-import '../assets/images/enemies.png';
+import './assets/images/enemies_atlas.json';
+import './assets/images/enemies_anim.json';
+import './assets/audio/bear.mp3';
+import './assets/audio/wolf.mp3';
+import './assets/audio/ent.mp3';
+import './assets/images/enemies.png';
 
 export default class MatterEntity extends Phaser.Physics.Matter.Sprite {
   private health: any;

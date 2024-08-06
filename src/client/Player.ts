@@ -1,10 +1,10 @@
 import Phaser from 'phaser';
 
-import '../assets/images/female_atlas.json';
-import '../assets/images/female_anim.json';
-import '../assets/images/female.png';
-import '../assets/images/items.png';
-import '../assets/audio/player.mp3';
+import './assets/images/female_atlas.json';
+import './assets/images/female_anim.json';
+import './assets/images/female.png';
+import './assets/images/items.png';
+import './assets/audio/player.mp3';
 import MatterEntity from "./MatterEntity";
 import TextWindow from "./TextWindow";
 

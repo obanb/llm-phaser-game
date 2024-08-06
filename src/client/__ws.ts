@@ -1,6 +1,6 @@
 import {io} from "socket.io-client";
 
-const WS_AGENT_URL = process.env.WS_AGENT_URL;
+// const WS_AGENT_URL = process.env.WS_AGENT_URL;
 
 let activeWs = {};
 
@@ -10,20 +10,20 @@ export const spawnWsAgent = (opts = {
     reconnectDelay: 1000,
 }) => {
     const uuid = crypto.randomUUID();
-    const socket = io(WS_AGENT_URL!, {
+    const socket = io("http://localhost:8080/agent/ws", {
         autoConnect: opts.autoReconnect,
         reconnectionAttempts: opts.reconnectAttempts,
         reconnectionDelay: opts.reconnectDelay,
     });
 
     socket.on('connect', () => {
-        console.log(`agent ${uuid} connected to ${WS_AGENT_URL}`);
+        console.log(`agent ${uuid} connected to ${"http://localhost:8080/agent/ws"}`);
     });
 
     activeWs[uuid] = socket;
 
     socket.on('disconnect', () => {
-        console.log(`agent ${uuid} disconnected from ${WS_AGENT_URL}`);
+        console.log(`agent ${uuid} disconnected from ${ "http://localhost:8080/agent/ws"}`);
         delete activeWs[uuid];
     })
 
