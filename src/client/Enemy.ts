@@ -7,17 +7,15 @@ import '../assets/audio/wolf.mp3';
 import '../assets/audio/ent.mp3';
 import '../assets/images/enemies.png';
 import MatterEntity from "./MatterEntity";
-import {io} from "socket.io-client";
+import {spawnWsAgent} from "./__ws";
 
 
 export default class Enemy extends MatterEntity {
   private attacktimer: any;
   private attacking: any;
 
-  constructor(data){
-
-    super({scene:data.scene,x:data.enemy.x,y:data.enemy.y,texture:'enemies',frame:`${data.enemy.name}_idle_1`,drops: JSON.parse(data.enemy.properties.find(p=>p.name=='drops').value),health:data.enemy.properties.find(p=>p.name=='health').value,name:data.enemy.name});
-
+  constructor({scene, enemy: {x, y, properties, name}}: {scene: Phaser.Scene, enemy: Phaser.Types.Tilemaps.TiledObject}){
+    super({scene:scene,x,y,texture:'enemies',frame:`${name}_idle_1`,drops: JSON.parse(properties.find(p=>p.name=='drops').value),health: properties.find(p=>p.name=='health').value,name});
     console.log(this.scene.textures.get('enemies').getFrameNames());
 
 
@@ -36,12 +34,7 @@ export default class Enemy extends MatterEntity {
       context:this.scene,
     });
 
-
-    const socket = io("http://localhost:8080/agent/ws");
-
-    socket.on('connect', () => {
-      console.log('Connected to /socket');
-    });
+    const socket = spawnWsAgent()
 
     socket.emit('message', 'im here');
 
@@ -82,7 +75,7 @@ export default class Enemy extends MatterEntity {
     if(this.attacking){
       let direction = this.attacking.position.subtract(this.position);
       if(direction.length()>24) {
-        let v = direction.normalize();
+        direction.normalize();
         this.setVelocityX(direction.x);
         this.setVelocityY(direction.y);
         if(this.attacktimer) {
@@ -101,7 +94,5 @@ export default class Enemy extends MatterEntity {
     }else {
       this.anims.play(`${this.name}_idle`,true);
     }
-
-
   }
 }

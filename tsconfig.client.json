@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "commonjs",
-    "rootDir": "./src/server",
-    "outDir": "dist/server",
+    "rootDir": "./src/client",
+    "outDir": "dist/client",
     "strict": true,
     "esModuleInterop": true,
     "useUnknownInCatchVariables": false,
@@ -11,6 +11,6 @@
     "noImplicitAny": false,
     "strictPropertyInitialization": false
   },
-  "include": ["src/server/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src/client/**/*","src/assets/**/*"],
+  "exclude": ["src/server", "node_modules"]
 }

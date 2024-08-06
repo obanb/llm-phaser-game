@@ -4,9 +4,9 @@
   "description": "aigame",
   "main": "index.js",
   "scripts": {
-    "client:start": "webpack serve --mode development",
-    "client:build": "webpack --mode production",
-    "server:start": "tsc && node -r dotenv/config dist/server/index.js"
+    "client:build": "webpack --config webpack.config.js",
+    "client:start": "npm run client:build && webpack serve --config webpack.config.js",
+    "server:start": "tsc -p tsconfig.json && node -r dotenv/config dist/server/index.js"
   },
   "author": "ondrej basista",
   "license": "ISC",

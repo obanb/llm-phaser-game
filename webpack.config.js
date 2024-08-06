@@ -1,8 +1,10 @@
 const path = require('path');
+const dotenv = require('dotenv');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+dotenv.config();
 
 module.exports = {
-    entry: './src/js/survival-game.ts', // Adjust the entry point as needed
+    entry: './src/client/survival-game.ts', // Adjust the entry point as needed
     output: {
         filename: 'client_bundle.js',
         path: path.resolve(__dirname, 'dist'),
@@ -16,7 +18,14 @@ module.exports = {
             {
                 test: /\.ts$/,
                 exclude: /node_modules/,
-                use: 'ts-loader',
+                use: [
+                    {
+                        loader: 'ts-loader',
+                        options: {
+                            configFile: 'tsconfig.client.json', // Use the client-specific tsconfig
+                        },
+                    },
+                ],
             },
             {
                 test: /\.js$/,
@@ -54,6 +63,9 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './index.html', // Adjusted template path
+        }),
+        new HtmlWebpackPlugin({
+            'process.env': JSON.stringify(process.env)
         }),
     ],
     devServer: {
